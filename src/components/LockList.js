@@ -7,13 +7,11 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import AddNewLock from '../components/AddNewLock';
 import LockListRow from './LockListRow';
 
-type Props = {
-  listItems: []
-}
-
 type State = {
+  locks: [],
   dataSource: [],
 }
 
@@ -28,27 +26,29 @@ const styles = StyleSheet.create({
 
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-export default class LockList extends React.Component<Props, State> {
-  static defaultProps = {
-    listItems: [],
-  }
-
+export default class LockList extends React.Component<State> {
   state = {
-    dataSource: ds.cloneWithRows([]),
+    locks: [],
+    dataSource: ds.cloneWithRows(['1', '2']),
   }
 
-  componentDidMount = () => {
-    this.setState({ dataSource: ds.cloneWithRows(this.props.listItems) });
-  }
+  // componentDidMount = () => {
+  //   this.setState({ dataSource: ds.cloneWithRows(this.state.locks) });
+  // }
 
-  componentWillReceiveProps = (nextProps) => {
-    this.setState({ dataSource: ds.cloneWithRows(nextProps.listItems) });
+  handleNewLock = (lockObj) => {
+    const newLockList = [...this.state.locks, lockObj];
+    this.setState({
+      locks: newLockList,
+      dataSource: ds.cloneWithRows(newLockList),
+    });
+    console.log(this.state.locks);
   }
 
   render() {
     return (
       <View style={styles.container}>
-        {/* Add new lock component here */}
+        <AddNewLock callHandleNewLock={(lockObj) => { this.handleNewLock(lockObj); }} />
         <ListView
           style={styles.listView}
           enableEmptySections

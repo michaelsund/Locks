@@ -3,7 +3,6 @@
 import * as React from 'react';
 import {
   StyleSheet,
-  Button,
   View,
 } from 'react-native';
 
@@ -11,10 +10,6 @@ import LockList from '../components/LockList';
 
 type Props = {
   navigation: {},
-}
-
-type State = {
-  listItems: [],
 }
 
 const styles = StyleSheet.create({
@@ -41,22 +36,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class Settings extends React.Component<Props, State> {
-  state = {
-    listItems: [
-      {
-        ip: '192.168.1.130',
-      },
-      {
-        ip: '192.168.1.131',
-      },
-    ],
-  }
-
+export default class Settings extends React.Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <LockList listItems={this.state.listItems} />
+        <LockList />
       </View>
     );
   }
