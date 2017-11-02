@@ -42,7 +42,8 @@ export default class AddNewLock extends React.Component<Props, State> {
           animationType="slide"
           transparent={false}
           visible={this.state.modalOpen}
-          >
+          onRequestClose={() => {}}
+        >
           <View style={styles.modal}>
             <Text>Add a new lock</Text>
             <View style={styles.buttonsContainer}>

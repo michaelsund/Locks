@@ -56,7 +56,17 @@ export default class LockUnlock extends React.Component<Props, State> {
       buttonDisabled: true,
       loading: true,
     });
-    fetch(`http://${this.props.ip}/${path}`, { timeout: 4000 })
+    fetch(
+      `http://${this.props.ip}/${path}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify({ secret: 123456 }),
+      },
+    )
       .then(response => response.json())
       .then((responseJson) => {
         this.setState({

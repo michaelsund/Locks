@@ -45,7 +45,7 @@ export default class Home extends React.Component<Props> {
         <Text style={styles.instructions}>
           Press to lock and unlock
         </Text>
-        <LockUnlock ip="192.168.1.130"/>
+        <LockUnlock ip="192.168.1.140"/>
       </View>
     );
   }
