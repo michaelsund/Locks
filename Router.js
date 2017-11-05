@@ -1,39 +1,50 @@
-// import * as React from 'react';
-// import {
-//   Image
-// } from 'react-native';
+import * as React from 'react';
+import {
+  StyleSheet,
+} from 'react-native';
 import { TabNavigator } from 'react-navigation';
+import { EvilIcons } from '@expo/vector-icons';
 
 import Home from './src/containers/Home';
 import Settings from './src/containers/Settings';
+
+const tabBarIconSize = 24;
+
+const styles = StyleSheet.create({
+  tabBarIcon: {
+    color: '#FFFFFF',
+  },
+});
 
 const Router = TabNavigator({
   Home: {
     screen: Home,
     navigationOptions: {
       tabBarLabel: 'Locks',
+      tabBarIcon: <EvilIcons name="lock" style={styles.tabBarIcon} size={tabBarIconSize} />,
     },
   },
   Settings: {
     screen: Settings,
     navigationOptions: {
       tabBarLabel: 'Settings',
-      // tabBarIcon: <Image source={require('../pics/')} />
+      tabBarIcon: <EvilIcons name="gear" style={styles.tabBarIcon} size={tabBarIconSize} />,
     },
   },
 }, {
   tabBarPosition: 'bottom',
   animationEnabled: true,
+  swipeEnabled: false,
   tabBarOptions: {
-    activeTintColor: '#e91e63',
+    showIcon: true,
+    activeTintColor: '#FFFFFF',
     style: {
-      // backgroundColor: 'blue',
+      backgroundColor: '#000000',
     },
     indicatorStyle: {
-      backgroundColor: '#e91e63',
+      backgroundColor: '#FFFFFF',
     },
   },
 });
-
 
 export default Router;

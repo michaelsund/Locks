@@ -39,11 +39,11 @@ export default class Home extends React.Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
+        {/* <Text style={styles.welcome}>
           Door locker
-        </Text>
+        </Text> */}
         <Text style={styles.instructions}>
-          Press to lock and unlock
+          Tap to toggle the lock
         </Text>
         <LockUnlock ip="192.168.1.140"/>
       </View>

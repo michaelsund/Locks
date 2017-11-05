@@ -5,10 +5,10 @@ import {
   StyleSheet,
   View,
   TouchableHighlight,
-  Image,
   Text,
   ActivityIndicator,
 } from 'react-native';
+import { EvilIcons } from '@expo/vector-icons';
 
 type Props = {
   ip: string,
@@ -36,7 +36,12 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  lockIcon: {
+    color: '#000000',
+  },
 });
+
+const lockIconSize = 140;
 
 export default class LockUnlock extends React.Component<Props, State> {
   state = {
@@ -64,7 +69,7 @@ export default class LockUnlock extends React.Component<Props, State> {
           'Content-Type': 'application/json',
         },
         method: 'POST',
-        body: JSON.stringify({ secret: 123456 }),
+        body: JSON.stringify({ secret: '8XTbevVE7Ahu5tPh' }),
       },
     )
       .then(response => response.json())
@@ -105,10 +110,7 @@ export default class LockUnlock extends React.Component<Props, State> {
             underlayColor='#F5FCFF'
             disabled={this.state.buttonDisabled}
           >
-            <Image
-              style={styles.image}
-              source={require('../pics/locked.png')}
-            />
+            <EvilIcons name="lock" style={styles.tabBarIcon} size={lockIconSize} />
           </TouchableHighlight>
         ) : (
           <TouchableHighlight
@@ -116,10 +118,8 @@ export default class LockUnlock extends React.Component<Props, State> {
             underlayColor='#F5FCFF'
             disabled={this.state.buttonDisabled}
           >
-            <Image
-              style={styles.image}
-              source={require('../pics/unlocked.png')}
-            />
+            <
+            EvilIcons name="unlock" style={styles.lockIcon} size={lockIconSize} />
           </TouchableHighlight>
         )}
         <Text style={styles.instructions}>
