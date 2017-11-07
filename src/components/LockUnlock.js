@@ -19,6 +19,7 @@ type State = {
   message: string,
   buttonDisabled: bool,
   loading: bool,
+  connectionError: bool,
 }
 
 const styles = StyleSheet.create({
@@ -49,6 +50,7 @@ export default class LockUnlock extends React.Component<Props, State> {
     message: 'Checking status...',
     buttonDisabled: true,
     loading: true,
+    connectionError: false,
   }
 
   componentDidMount = () => {
@@ -75,6 +77,7 @@ export default class LockUnlock extends React.Component<Props, State> {
       .then(response => response.json())
       .then((responseJson) => {
         this.setState({
+          connectionError: false,
           locked: responseJson.locked,
           message: responseJson.message,
         });
@@ -82,6 +85,7 @@ export default class LockUnlock extends React.Component<Props, State> {
       .catch((error) => {
         console.log(error);
         this.setState({
+          connectionError: true,
           message: 'Connection problem...',
         });
       })
@@ -91,6 +95,10 @@ export default class LockUnlock extends React.Component<Props, State> {
           loading: false,
         });
       });
+  }
+
+  status = () => {
+    this.handleGet('status');
   }
 
   unLock = () => {
@@ -104,23 +112,33 @@ export default class LockUnlock extends React.Component<Props, State> {
   render() {
     return (
       <View style={ styles.container }>
-        { this.state.locked ? (
+        { this.state.connectionError ? (
           <TouchableHighlight
-            onPress={() => { this.unLock(); }}
+            onPress={() => { this.status(); }}
             underlayColor='#F5FCFF'
             disabled={this.state.buttonDisabled}
           >
-            <EvilIcons name="lock" style={styles.tabBarIcon} size={lockIconSize} />
+            <EvilIcons name="exclamation" style={styles.tabBarIcon} size={lockIconSize} />
           </TouchableHighlight>
         ) : (
-          <TouchableHighlight
-            onPress={() => { this.lock(); }}
-            underlayColor='#F5FCFF'
-            disabled={this.state.buttonDisabled}
-          >
-            <
-            EvilIcons name="unlock" style={styles.lockIcon} size={lockIconSize} />
-          </TouchableHighlight>
+          this.state.locked ? (
+            <TouchableHighlight
+              onPress={() => { this.unLock(); }}
+              underlayColor='#F5FCFF'
+              disabled={this.state.buttonDisabled}
+            >
+              <EvilIcons name="lock" style={styles.tabBarIcon} size={lockIconSize} />
+            </TouchableHighlight>
+          ) : (
+            <TouchableHighlight
+              onPress={() => { this.lock(); }}
+              underlayColor='#F5FCFF'
+              disabled={this.state.buttonDisabled}
+            >
+              <
+              EvilIcons name="unlock" style={styles.lockIcon} size={lockIconSize} />
+            </TouchableHighlight>
+          )
         )}
         <Text style={styles.instructions}>
           {this.state.message}
