@@ -5,8 +5,8 @@ import {
 import { TabNavigator } from 'react-navigation';
 import { EvilIcons } from '@expo/vector-icons';
 
-import Home from '../containers/Home';
-import Settings from '../containers/Settings';
+import Home from './containers/Home';
+import Settings from './containers/Settings';
 
 const tabBarIconSize = 24;
 

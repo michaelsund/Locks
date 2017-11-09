@@ -13,6 +13,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-react": "^7.4.0",
     "eslint-plugin-react-native": "^3.1.0",
+    "flow-bin": "0.53.0",
     "jest": "21.2.1",
     "jest-expo": "^21.0.2",
     "react-native-scripts": "1.5.0",
@@ -20,7 +21,8 @@
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "build": "babel src/ -d lib/",
+    "flow": "node_modules/.bin/flow; test $? -eq 1 -o $? -eq 2",
+    "flow-stop": "node_modules/.bin/flow stop",
     "prepublish": "yarn run build",
     "start": "react-native-scripts start",
     "eject": "react-native-scripts eject",

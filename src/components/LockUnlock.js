@@ -12,7 +12,7 @@ import { EvilIcons } from '@expo/vector-icons';
 
 type Props = {
   ip: string,
-}
+};
 
 type State = {
   locked: bool,
@@ -20,7 +20,7 @@ type State = {
   buttonDisabled: bool,
   loading: bool,
   connectionError: bool,
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -57,7 +57,7 @@ export default class LockUnlock extends React.Component<Props, State> {
     this.handleGet('status');
   }
 
-  handleGet = (path) => {
+  handleGet = (path: string) => {
     this.setState({
       message: 'Sending request, please wait..',
       buttonDisabled: true,

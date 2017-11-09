@@ -11,9 +11,11 @@ import AddNewLock from '../components/AddNewLock';
 import LockListRow from './LockListRow';
 
 type State = {
-  locks: [],
-  dataSource: [],
+  locks: Array<Object>,
+  dataSource: Array<Object>,
 }
+
+type Props = {}
 
 const styles = StyleSheet.create({
   container: {
@@ -26,7 +28,7 @@ const styles = StyleSheet.create({
 
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-export default class LockList extends React.Component<State> {
+export default class LockList extends React.Component<Props, State> {
   state = {
     locks: [],
     dataSource: ds.cloneWithRows(['1', '2']),
@@ -36,8 +38,8 @@ export default class LockList extends React.Component<State> {
   //   this.setState({ dataSource: ds.cloneWithRows(this.state.locks) });
   // }
 
-  handleNewLock = (lockObj) => {
-    const newLockList = [...this.state.locks, lockObj];
+  handleNewLock = (lockObj: {}) => {
+    const newLockList: Array<Object> = [...this.state.locks, lockObj];
     this.setState({
       locks: newLockList,
       dataSource: ds.cloneWithRows(newLockList),

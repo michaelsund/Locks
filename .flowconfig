@@ -30,12 +30,17 @@
 ; Ignore react-native-fbads dependency of the expo sdk
 .*/node_modules/react-native-fbads/*
 
+<PROJECT_ROOT>/node_modules/.*
+<PROJECT_ROOT>/libdefs.js
+.*/__tests__/.*
+
 [include]
 
 [libs]
 node_modules/react-native/Libraries/react-native/react-native-interface.js
 node_modules/react-native/flow
 flow/
+./libdefs.js
 
 [options]
 module.system=haste
@@ -60,4 +65,4 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 unsafe.enable_getters_and_setters=true
 
 [version]
-0.58.0
+^0.53.0
