@@ -4,7 +4,6 @@ import * as React from 'react';
 import {
   View,
   StyleSheet,
-  Text,
 } from 'react-native';
 import LockUnlock from '../components/LockUnlock';
 
@@ -15,9 +14,8 @@ type Props = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    marginTop: 20,
   },
   welcome: {
     fontSize: 20,
@@ -39,13 +37,7 @@ export default class Home extends React.Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        {/* <Text style={styles.welcome}>
-          Door locker
-        </Text> */}
-        <Text style={styles.instructions}>
-          Tap to toggle the lock
-        </Text>
-        <LockUnlock ip="192.168.1.140"/>
+        <LockUnlock />
       </View>
     );
   }

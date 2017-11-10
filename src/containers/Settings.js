@@ -4,9 +4,8 @@ import * as React from 'react';
 import {
   StyleSheet,
   View,
+  Text,
 } from 'react-native';
-
-import LockList from '../components/LockList';
 
 type Props = {
   navigation: {},
@@ -18,7 +17,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-    marginTop: 20,
   },
   welcome: {
     fontSize: 20,
@@ -40,7 +38,7 @@ export default class Settings extends React.Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <LockList />
+        <Text>Settings page, ip and stuff</Text>
       </View>
     );
   }
