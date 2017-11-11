@@ -8,7 +8,7 @@ import {
   Text,
   TouchableHighlight,
   TextInput,
-  Button,
+  AsyncStorage,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -25,29 +25,44 @@ type State = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    margin: 20,
   },
   icon: {
-    color: '#000000',
+    color: '#FFFFFF',
     padding: 20,
   },
   input: {
     height: 60,
     marginBottom: 40,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  button: {
+    width: '40%',
+  },
 });
 
-export default class ChangeIp extends React.Component<Props, State> {
+export default class Settings extends React.Component<Props, State> {
   state = {
     ip: this.props.ip,
     modalVisible: false,
   }
 
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({ ip: nextProps.ip });
+  }
+
   handleUpdateIp = () => {
-    this.props.updateIpToParent(this.state.ip);
-    this.setState({ modalVisible: !this.state.modalVisible });
+    AsyncStorage.setItem('@Locks:ip', this.state.ip)
+      .then(() => {
+        this.props.updateIpToParent(this.state.ip);
+        this.setState({ modalVisible: !this.state.modalVisible });
+      })
+      .catch(() => {
+        // Handle error
+      });
   }
 
   handleCancel = () => {
@@ -55,6 +70,13 @@ export default class ChangeIp extends React.Component<Props, State> {
       modalVisible: !this.state.modalVisible,
       ip: this.props.ip,
     });
+  }
+
+  resetIp = () => {
+    AsyncStorage.removeItem('@Locks:ip')
+      .then(() => {
+        console.log('ip removed');
+      });
   }
 
   render() {
@@ -66,6 +88,10 @@ export default class ChangeIp extends React.Component<Props, State> {
           }}>
           <MaterialIcons name="settings" style={styles.icon} size={40} />
         </TouchableHighlight>
+        {/* <TouchableHighlight
+          onPress={() => { this.resetIp(); }}>
+          <MaterialIcons name="remove" style={styles.icon} size={40} />
+        </TouchableHighlight> */}
         <Modal
           animationType="slide"
           transparent={false}
@@ -80,18 +106,20 @@ export default class ChangeIp extends React.Component<Props, State> {
                 value={this.state.ip}
                 onChangeText={(ip) => this.setState({ ip })}
               />
-              <Button
-                title="set ip"
-                onPress={() => {
-                  this.handleUpdateIp();
-                }}>
-              </Button>
-              <Button
-                title="Cancel"
-                onPress={() => {
-                  this.handleCancel();
-                }}>
-              </Button>
+              <View style={styles.buttonContainer}>
+                <TouchableHighlight
+                  onPress={() => {
+                    this.handleUpdateIp();
+                  }}>
+                  <Text>Done</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  onPress={() => {
+                    this.handleCancel();
+                  }}>
+                  <Text>Cancel</Text>
+                </TouchableHighlight>
+              </View>
             </View>
           </View>
         </Modal>

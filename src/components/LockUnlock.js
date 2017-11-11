@@ -7,10 +7,12 @@ import {
   TouchableHighlight,
   Text,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 
-import ChangeIp from './ChangeIp';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+
+import Settings from './Settings';
 
 type State = {
   ip: string,
@@ -23,13 +25,11 @@ type State = {
 
 const styles = StyleSheet.create({
   outerContainer: {
-    backgroundColor: '#F5FCFF',
   },
   innerContainer: {
     marginTop: 180,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   image: {
     width: 150,
@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
   },
   instructions: {
     textAlign: 'center',
-    color: '#333333',
+    color: '#FFFFFF',
     marginBottom: 5,
   },
   icon: {
-    color: '#000000',
+    color: '#FFFFFF',
   },
   changeIpIcon: {
     position: 'absolute',
@@ -55,16 +55,28 @@ const lockIconSize = 120;
 
 export default class LockUnlock extends React.Component<{}, State> {
   state = {
-    ip: '192.168.1.140',
+    ip: '',
     locked: true,
-    message: 'Checking status...',
+    message: 'No ip set',
     buttonDisabled: true,
-    loading: true,
+    loading: false,
     connectionError: false,
   }
 
   componentDidMount = () => {
-    this.handleGet('status');
+    AsyncStorage.getItem('@Locks:ip')
+      .then((ip: string) => {
+        console.log(`ip from storage is: ${ip}`);
+        if (ip !== null) {
+          this.setState({ ip });
+          this.handleGet('status');
+        } else {
+          // TODO Tell the user to input ip under settings
+        }
+      })
+      .catch((e) => {
+        console.log(`Error fetching from storage: ${e}`);
+      });
   }
 
   handleGet = (path: string) => {
@@ -122,50 +134,55 @@ export default class LockUnlock extends React.Component<{}, State> {
 
   setIp = (ip: string) => {
     this.setState({ ip });
+    this.status();
   }
 
   render() {
     return (
       <View style={styles.outerContainer}>
-        <ChangeIp
+        <Settings
           style={styles.changeIpIcon}
-          ip="192.168.1.30"
+          ip={this.state.ip}
           updateIpToParent={(ip) => { this.setIp(ip); }}
         />
         <View style={styles.innerContainer}>
-          { this.state.connectionError ? (
-            <TouchableHighlight
-              onPress={() => { this.status(); }}
-              underlayColor='#F5FCFF'
-              disabled={this.state.buttonDisabled}
-            >
-              <MaterialIcons name="error" style={styles.icon} size={lockIconSize} />
-            </TouchableHighlight>
+          { this.state.loading ? (
+            <ActivityIndicator
+              size={100}
+              animating={this.state.loading}
+            />
           ) : (
-            this.state.locked ? (
+            this.state.connectionError ? (
               <TouchableHighlight
-                onPress={() => { this.unLock(); }}
+                onPress={() => { this.status(); }}
                 underlayColor='#F5FCFF'
                 disabled={this.state.buttonDisabled}
               >
-                <MaterialIcons name="lock" style={styles.icon} size={lockIconSize} />
+                <MaterialIcons name="error" style={styles.icon} size={lockIconSize} />
               </TouchableHighlight>
             ) : (
-              <TouchableHighlight
-                onPress={() => { this.lock(); }}
-                underlayColor='#F5FCFF'
-                disabled={this.state.buttonDisabled}
-              >
-                <MaterialIcons name="unlock" style={styles.icon} size={lockIconSize} />
-              </TouchableHighlight>
+              this.state.locked ? (
+                <TouchableHighlight
+                  onPress={() => { this.unLock(); }}
+                  underlayColor='#F5FCFF'
+                  disabled={this.state.buttonDisabled}
+                >
+                  <FontAwesome name="lock" style={styles.icon} size={lockIconSize} />
+                </TouchableHighlight>
+              ) : (
+                <TouchableHighlight
+                  onPress={() => { this.lock(); }}
+                  underlayColor='#F5FCFF'
+                  disabled={this.state.buttonDisabled}
+                >
+                  <FontAwesome name="unlock-alt" style={styles.icon} size={lockIconSize} />
+                </TouchableHighlight>
+              )
             )
           )}
           <Text style={styles.instructions}>
             {this.state.message}
           </Text>
-          <ActivityIndicator
-            animating={this.state.loading}
-          />
         </View>
       </View>
     );

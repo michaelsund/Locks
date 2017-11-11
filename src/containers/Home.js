@@ -5,7 +5,9 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
+
 import LockUnlock from '../components/LockUnlock';
+import BackgroundImage from '../components/BackgroundImage';
 
 type Props = {
   navigation: {},
@@ -14,7 +16,6 @@ type Props = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
     marginTop: 20,
   },
   welcome: {
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
   },
   instructions: {
     textAlign: 'center',
-    color: '#333333',
+    color: '#FFFFFF',
     marginBottom: 5,
   },
   icon: {
@@ -36,9 +37,11 @@ const styles = StyleSheet.create({
 export default class Home extends React.Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
-        <LockUnlock />
-      </View>
+      <BackgroundImage>
+        <View style={styles.container}>
+          <LockUnlock />
+        </View>
+      </BackgroundImage>
     );
   }
 }
