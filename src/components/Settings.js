@@ -6,7 +6,7 @@ import {
   Modal,
   View,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   TextInput,
   AsyncStorage,
 } from 'react-native';
@@ -14,26 +14,35 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 type Props = {
   ip: string,
-  updateIpToParent: Function,
+  ip: secret,
+  updateToParent: Function,
 }
 
 type State = {
   ip: string,
+  ip: secret,
   modalVisible: bool,
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 20,
+    marginTop: 60,
+    marginLeft: 20,
+    marginRight: 20,
   },
   icon: {
     color: '#FFFFFF',
     padding: 20,
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   input: {
-    height: 60,
-    marginBottom: 40,
+    borderColor: 'gray',
+    borderRadius: 6,
+    borderWidth: 1,
+    height: 40,
+    margin: 10,
+    padding: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -47,18 +56,25 @@ const styles = StyleSheet.create({
 export default class Settings extends React.Component<Props, State> {
   state = {
     ip: this.props.ip,
+    secret: this.props.secret,
     modalVisible: false,
   }
 
   componentWillReceiveProps = (nextProps) => {
-    this.setState({ ip: nextProps.ip });
+    this.setState({ ip: nextProps.ip, secret: nextProps.secret });
   }
 
-  handleUpdateIp = () => {
-    AsyncStorage.setItem('@Locks:ip', this.state.ip)
+  handleUpdate = () => {
+    AsyncStorage.setItem('@Locks:secret', this.state.secret)
       .then(() => {
-        this.props.updateIpToParent(this.state.ip);
-        this.setState({ modalVisible: !this.state.modalVisible });
+        AsyncStorage.setItem('@Locks:ip', this.state.ip)
+          .then(() => {
+            this.setState({ modalVisible: !this.state.modalVisible });
+            this.props.updateToParent(this.state.ip, this.state.secret);
+          })
+          .catch(() => {
+            // Handle error
+          });
       })
       .catch(() => {
         // Handle error
@@ -67,31 +83,34 @@ export default class Settings extends React.Component<Props, State> {
 
   handleCancel = () => {
     this.setState({
-      modalVisible: !this.state.modalVisible,
-      ip: this.props.ip,
+      modalVisible: !this.state.modalVisible
     });
   }
 
-  resetIp = () => {
+  resetIpSecret = () => {
     AsyncStorage.removeItem('@Locks:ip')
       .then(() => {
         console.log('ip removed');
+        AsyncStorage.removeItem('@Locks:secret')
+          .then(() => {
+            console.log('secret removed');
+          });
       });
   }
 
   render() {
     return (
       <View>
-        <TouchableHighlight
+        <TouchableOpacity
           onPress={() => {
             this.setState({ modalVisible: !this.state.modalVisible });
           }}>
           <MaterialIcons name="settings" style={styles.icon} size={40} />
-        </TouchableHighlight>
-        {/* <TouchableHighlight
-          onPress={() => { this.resetIp(); }}>
+        </TouchableOpacity>
+        {/* <TouchableOpacity
+          onPress={() => { this.resetIpSecret(); }}>
           <MaterialIcons name="remove" style={styles.icon} size={40} />
-        </TouchableHighlight> */}
+        </TouchableOpacity> */}
         <Modal
           animationType="slide"
           transparent={false}
@@ -100,25 +119,32 @@ export default class Settings extends React.Component<Props, State> {
         >
           <View style={styles.container}>
             <View>
-              <Text>Set ip adress</Text>
+              <Text style={{ alignSelf: 'center' }}>Device IP</Text>
               <TextInput
                 style={styles.input}
                 value={this.state.ip}
                 onChangeText={(ip) => this.setState({ ip })}
               />
+              <Text style={{ alignSelf: 'center' }}>Secret</Text>
+              <TextInput
+                secureTextEntry
+                style={styles.input}
+                value={this.state.secret}
+                onChangeText={(secret) => this.setState({ secret })}
+              />
               <View style={styles.buttonContainer}>
-                <TouchableHighlight
+                <TouchableOpacity
                   onPress={() => {
-                    this.handleUpdateIp();
+                    this.handleUpdate();
                   }}>
                   <Text>Done</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={() => {
                     this.handleCancel();
                   }}>
                   <Text>Cancel</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
